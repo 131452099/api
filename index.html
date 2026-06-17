@@ -1,170 +1,62 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>图片 API - api.600060.xyz</title>
-  <style>
-    * { margin:0; padding:0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .container { max-width: 600px; text-align: center; }
-    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; font-size: 1.1rem; }
-    .card {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-    }
-    .endpoint { 
-      font-family: monospace; 
-      background: rgba(0,0,0,0.3); 
-      padding: 0.75rem 1rem; 
-      border-radius: 8px; 
-      margin: 1rem 0;
-      font-size: 1.1rem;
-      word-break: break-all;
-    }
-    .btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #fff;
-      text-decoration: none;
-      padding: 0.75rem 2rem;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      margin-top: 1rem;
-      transition: opacity 0.2s;
-      border: none;
-      cursor: pointer;
-    }
-    .btn:hover { opacity: 0.85; }
-    .preview {
-      margin-top: 2rem;
-      max-width: 100%;
-      border-radius: 12px;
-      display: none;
-    }
-    .stats { 
-      display: flex; 
-      justify-content: center; 
-      gap: 2rem; 
-      margin-top: 1.5rem;
-      color: rgba(255,255,255,0.6);
-      font-size: 0.9rem;
-    }
-    .footer {
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.4);
-      font-size: 0.8rem;
-    }
-    .footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
-    .footer a:hover { color: rgba(255,255,255,0.7); text-decoration: underline; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随机图片 API - 风栖十月</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.card { background: #fff; border-radius: 16px; padding: 48px 40px; box-shadow: 0 8px 32px rgba(0,0,0,.08); text-align: center; max-width: 440px; width: 90%; }
+.logo { font-size: 48px; margin-bottom: 16px; }
+h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+.tagline { font-size: 13px; color: #888; margin-bottom: 32px; }
+.section { margin-bottom: 24px; text-align: left; }
+.section-title { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.api-url { background: #f6f8fa; border-radius: 8px; padding: 14px 16px; font-family: "SF Mono", "Fira Code", monospace; font-size: 13px; color: #0052cc; word-break: break-all; border: 1px solid #e8ecf0; }
+.btn-group { display: flex; gap: 12px; margin-top: 8px; }
+.btn { flex: 1; padding: 12px 0; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; text-align: center; transition: all .15s; cursor: pointer; border: none; }
+.btn-primary { background: #0052cc; color: #fff; }
+.btn-primary:hover { background: #003d99; }
+.btn-secondary { background: #f0f2f5; color: #333; border: 1px solid #ddd; }
+.btn-secondary:hover { background: #e4e6ea; }
+.footer { margin-top: 32px; font-size: 11px; color: #bbb; }
+.footer a { color: #999; text-decoration: none; }
+.footer a:hover { color: #0052cc; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>🖼️ 图片 API</h1>
-    <p>随机二次元壁纸 API · 2420+ 张图片</p>
-
-    <div class="card">
-      <h3>随机图片接口</h3>
-      <div class="endpoint">GET /api/random</div>
-      <p style="font-size:0.9rem;margin:0.5rem 0;">返回 302 重定向到随机图片</p>
-      <a href="/api/random" class="btn">查看随机图片 →</a>
-    </div>
-
-    <div class="card">
-      <h3>直接访问图片</h3>
-      <p style="font-size:0.9rem;margin:0.5rem 0;">在浏览器或 &lt;img&gt; 标签中直接使用：</p>
-      <div class="endpoint" id="urlBox">https://opg.dpdns.org/images/...</div>
-      <button class="btn" onclick="loadRandom()" style="cursor:pointer;">换一张</button>
-      <br>
-      <img id="preview" class="preview" alt="preview">
-    </div>
-
-    <div class="stats">
-      <span>📦 2420+ 张图片</span>
-      <span>🚀 R2 存储</span>
-      <span>⚡ EdgeOne 加速</span>
-    </div>
-
-    <footer class="footer">
-      © 2026 风栖十月 |
-      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">苏ICP备2026025316号</a> |
-      <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32098102321404" target="_blank" rel="noopener">苏公网安备32098102321404号</a>
-    </footer>
+<div class="card">
+  <div class="logo">🖼️</div>
+  <h1>随机图片 API</h1>
+  <p class="tagline">每次请求返回一张随机图片（302 重定向）</p>
+  <div class="section">
+    <div class="section-title">API 地址</div>
+    <div class="api-url" id="apiUrl"></div>
   </div>
-
-  <script>
-    // 图片列表（内嵌，首次加载后用 localStorage 缓存）
-    let imageList = [];
-
-    async function loadImageList() {
-      if (imageList.length > 0) return;
-      // 尝试从 localStorage 读取
-      const cached = localStorage.getItem('img_list');
-      if (cached) {
-        try {
-          imageList = JSON.parse(cached);
-          return;
-        } catch(e) {}
-      }
-      // 从 R2 获取列表
-      try {
-        const resp = await fetch('https://opg.dpdns.org/image_list.json');
-        if (resp.ok) {
-          imageList = await resp.json();
-          localStorage.setItem('img_list', JSON.stringify(imageList));
-        }
-      } catch(e) {
-        console.error('Failed to load image list', e);
-      }
-    }
-
-    function getRandomImage() {
-      if (imageList.length === 0) return 'https://opg.dpdns.org/images/';
-      const idx = Math.floor(Math.random() * imageList.length);
-      return 'https://opg.dpdns.org/images/' + encodeURIComponent(imageList[idx]);
-    }
-
-    async function loadRandom() {
-      await loadImageList();
-      const url = getRandomImage();
-      document.getElementById('urlBox').textContent = url;
-      document.getElementById('preview').style.display = 'block';
-      document.getElementById('preview').src = url;
-    }
-
-    // /api/random 页面的逻辑
-    if (window.location.pathname === '/api/random') {
-      // 直接 302 跳转到随机图片
-      fetch('https://opg.dpdns.org/image_list.json')
-        .then(r => r.json())
-        .then(list => {
-          const idx = Math.floor(Math.random() * list.length);
-          window.location.href = 'https://opg.dpdns.org/images/' + encodeURIComponent(list[idx]);
-        })
-        .catch(() => {
-          // 备用：跳转到任意一张
-          window.location.href = 'https://opg.dpdns.org/';
-        });
-    }
-
-    loadRandom();
-  </script>
+  <div class="btn-group">
+    <a href="" class="btn btn-primary" id="tryBtn">随机图片 →</a>
+    <a href="javascript:void(0)" class="btn btn-secondary" id="copyBtn">复制 API</a>
+  </div>
+  <div class="footer">
+    © 2026 风栖十月
+    | <a href="https://beian.miit.gov.cn" target="_blank">苏ICP备2026025316号</a>
+    | <a href="https://www.beian.gov.cn" target="_blank">苏公网安备32098102321404号</a>
+  </div>
+</div>
+<script>
+const apiBase = location.origin;
+document.getElementById('apiUrl').textContent = apiBase + '/api/random';
+document.getElementById('tryBtn').href = apiBase + '/api/random';
+document.getElementById('copyBtn').addEventListener('click', function(e) {
+  e.preventDefault();
+  const url = apiBase + '/api/random';
+  navigator.clipboard.writeText(url).then(function() {
+    var btn = document.getElementById('copyBtn');
+    btn.textContent = '已复制！';
+    setTimeout(function() { btn.textContent = '复制 API'; }, 1500);
+  });
+});
+</script>
 </body>
 </html>

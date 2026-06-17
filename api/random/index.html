@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/api/random/redirect.html">
-  <title>Redirecting...</title>
-</head>
-<body>
-  <p>Redirecting to random image...</p>
-</body>
-</html>
+<script>
+fetch('/image_list.json').then(r=>r.json()).then(list=>{
+  var img = list[Math.floor(Math.random()*list.length)];
+  location.href = '/images/' + encodeURIComponent(img);
+});
+</script>
