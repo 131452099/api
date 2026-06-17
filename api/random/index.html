@@ -1,6 +1,0 @@
-<script>
-fetch('/image_list.json').then(r=>r.json()).then(list=>{
-  var img = list[Math.floor(Math.random()*list.length)];
-  location.href = '/images/' + encodeURIComponent(img);
-});
-</script>
