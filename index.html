@@ -45,12 +45,12 @@ h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
   </div>
 </div>
 <script>
-const apiBase = location.origin;
-document.getElementById('apiUrl').textContent = apiBase + '/api/random';
-document.getElementById('tryBtn').href = apiBase + '/api/random';
+const apiBase = 'https://a.600060.xyz';
+document.getElementById('apiUrl').textContent = apiBase + '/';
+document.getElementById('tryBtn').href = apiBase + '/';
 document.getElementById('copyBtn').addEventListener('click', function(e) {
   e.preventDefault();
-  const url = apiBase + '/api/random';
+  const url = apiBase + '/';
   navigator.clipboard.writeText(url).then(function() {
     var btn = document.getElementById('copyBtn');
     btn.textContent = '已复制！';
