@@ -3,78 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>随机图片 API - 风栖十月</title>
+<title>图片 API</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #e8f5e9; min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; }
-.bg-img { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.35; pointer-events: none; }
 .bg-loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%); z-index: 0; }
+.bg-img { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
 .card { background: #fff; border-radius: 16px; padding: 48px 40px; box-shadow: 0 8px 32px rgba(0,0,0,.08); text-align: center; max-width: 440px; width: 90%; position: relative; z-index: 1; }
-.logo { font-size: 48px; margin-bottom: 16px; }
-h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
-.tagline { font-size: 13px; color: #888; margin-bottom: 32px; }
-.section { margin-bottom: 24px; text-align: left; }
-.section-title { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-.api-url { background: #f6f8fa; border-radius: 8px; padding: 14px 16px; font-family: "SF Mono", "Fira Code", monospace; font-size: 13px; color: #0052cc; word-break: break-all; border: 1px solid #e8ecf0; }
-.btn-group { display: flex; gap: 12px; margin-top: 8px; }
-.btn { flex: 1; padding: 12px 0; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; text-align: center; transition: all .15s; cursor: pointer; border: none; }
-.btn-primary { background: #0052cc; color: #fff; }
-.btn-primary:hover { background: #003d99; }
-.btn-secondary { background: #f0f2f5; color: #333; border: 1px solid #ddd; }
-.btn-secondary:hover { background: #e4e6ea; }
-.footer { margin-top: 32px; font-size: 11px; color: #bbb; }
-.footer a { color: #999; text-decoration: none; }
-.footer a:hover { color: #0052cc; }
+h1 { font-size: 24px; color: #1a1a2e; margin-bottom: 12px; font-weight: 600; }
+.desc { color: #666; font-size: 15px; margin-bottom: 32px; line-height: 1.6; }
+.endpoint { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 10px; padding: 14px 18px; font-family: "SF Mono", Monaco, "Courier New", monospace; font-size: 15px; color: #0066cc; word-break: break-all; margin-bottom: 24px; }
+.endpoint a { color: #0066cc; text-decoration: none; }
+.endpoint a:hover { text-decoration: underline; }
+.btn-row { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.btn { flex: 1; min-width: 140px; padding: 14px 24px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-decoration: none; display: inline-block; text-align: center; box-sizing: border-box; }
+.btn-primary { background: #0066cc; color: #fff; }
+.btn-primary:hover { background: #0052a3; transform: translateY(-1px); }
+.btn-copy { background: #f1f3f5; color: #333; border: 1px solid #dee2e6; }
+.btn-copy:hover { background: #e9ecef; }
+.footer { margin-top: 32px; color: #aaa; font-size: 13px; line-height: 1.7; }
 </style>
 </head>
 <body>
 <div class="bg-loading" id="bgLoading"></div>
 <img class="bg-img" id="bgImg">
 <div class="card">
-  <div class="logo">🖼️</div>
-  <h1>随机图片 API</h1>
-  <p class="tagline">每次请求返回一张随机图片（302 重定向）</p>
-  <div class="section">
-    <div class="section-title">API 地址</div>
-    <div class="api-url" id="apiUrl"></div>
-  </div>
-  <div class="btn-group">
-    <a href="" class="btn btn-primary" id="tryBtn">随机图片 →</a>
-    <a href="javascript:void(0)" class="btn btn-secondary" id="copyBtn">复制 API</a>
-  </div>
-  <div class="footer">
-    © 2026 风栖十月
-    | <a href="https://beian.miit.gov.cn" target="_blank">苏ICP备2026025316号</a>
-    | <a href="https://www.beian.gov.cn" target="_blank">苏公网安备32098102321404号</a>
-  </div>
+<h1>🖼️ 随机图片 API</h1>
+<p class="desc">每次请求返回一张随机图片（302 重定向）</p>
+<div class="endpoint" id="apiUrl"><a href="https://a.600060.xyz/" target="_blank">https://a.600060.xyz/</a></div>
+<div class="btn-row">
+<a href="https://a.600060.xyz/" class="btn btn-primary" id="tryBtn" target="_blank">随机图片 →</a>
+<button class="btn btn-copy" id="copyBtn">复制 API</button>
+</div>
+<div class="footer">
+© 2026 风栖十月
+</div>
 </div>
 <script>
 const apiBase = 'https://a.600060.xyz';
 
-// 背景图加载
+// 背景图加载（直接设 src，让浏览器跟进 302）
 (function loadBg() {
-  const img = document.getElementById('bgImg');
-  const loading = document.getElementById('bgLoading');
-  fetch(apiBase + '/', { redirect: 'follow' })
-    .then(r => r.url)
-    .then(url => {
-      img.src = url;
-      img.onload = function() {
-        loading.style.display = 'none';
-        img.style.opacity = '0.35';
-      };
-    })
-    .catch(() => { loading.style.display = 'none'; });
+  var img = document.getElementById('bgImg');
+  var loading = document.getElementById('bgLoading');
+  img.src = apiBase + '/';
+  img.onload = function() {
+    loading.style.display = 'none';
+    img.style.opacity = '0.35';
+  };
+  img.onerror = function() {
+    loading.style.display = 'none';
+  };
 })();
 
-document.getElementById('apiUrl').textContent = apiBase + '/';
 document.getElementById('tryBtn').href = apiBase + '/';
 document.getElementById('copyBtn').addEventListener('click', function(e) {
   e.preventDefault();
-  const url = apiBase + '/';
+  var url = apiBase + '/';
   navigator.clipboard.writeText(url).then(function() {
     var btn = document.getElementById('copyBtn');
-    btn.textContent = '已复制！';
+    btn.textContent = '已复制 ✓';
     setTimeout(function() { btn.textContent = '复制 API'; }, 1500);
   });
 });
